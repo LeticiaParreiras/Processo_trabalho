@@ -6,7 +6,6 @@
 
 #define MAX 8000
 
-
 int lerArquivo(Processo p[], const char *nome_arquivo) {
     char linha[256];
     FILE *arq = fopen(nome_arquivo, "r");
@@ -19,26 +18,27 @@ int lerArquivo(Processo p[], const char *nome_arquivo) {
     fgets(linha, sizeof(linha), arq);
 
     int i = 0;
-    const char delimiters[] = ",\"{}";  // vírgulas, aspas duplas e chaves
+    
     while (fgets(linha, sizeof(linha), arq) != NULL && i < MAX) {
-        char *token = strtok(linha, delimiters);
+        linha[strcspn(linha, "\n")] = 0; // Remove o '\n'
+        
+        char *token = strtok(linha, ";");
         if (token) strcpy(p[i].id, token);
 
-        token = strtok(NULL, delimiters);
+        token = strtok(NULL, ";");
         if (token) strcpy(p[i].num, token);
 
-        token = strtok(NULL, delimiters);
+        token = strtok(NULL, ";");
         if (token) strcpy(p[i].dt_ajuizamento, token);
-
-        token = strtok(NULL, "\"{}");  // Pega a parte entre as aspas
-		if (token) strcpy(p[i].id_classe, token);
+        
+        token = strtok(NULL, ";");
+        if (token)strcpy(p[i].id_classe, token);
+       
+        token = strtok(NULL, ";");
+        if (token)strcpy(p[i].id_assunto, token);
       
-        token = strtok(NULL, delimiters);
-        if (token) strcpy(p[i].id_assunto, token);
-
-        token = strtok(NULL, delimiters);
+        token = strtok(NULL, ";");
         if (token) strcpy(p[i].ano_eleicao, token);
-        p[i].ano_eleicao[strcspn(p[i].ano_eleicao, "\n")] = 0;  // Remove o '\n'
 
         i++;
     }
@@ -89,31 +89,30 @@ void ordenarDt(Processo p[], int n) {
 }
 
 void criarArquivo(Processo p[], int i) {
-    FILE *fp;
-    int j, k;
-    fp = fopen("dados_ordenado.csv", "w");
+	int j;
+    FILE *fp = fopen("dados_ordenado.csv", "w");
     if (fp == NULL) {
         printf("ERRO na abertura do arquivo\n");
         exit(1);
     }
 
     // Escrevendo o cabeçalho no arquivo CSV
-    fprintf(fp, "id,numero,data_ajuizamento,id_classe,id_assunto,ano_eleicao\n");
+    fprintf(fp, "id;numero;data_ajuizamento;id_classe;id_assunto;ano_eleicao\n");
 
     // Escrevendo os dados dos processos no arquivo CSV
     for (j = 0; j < i; j++) {
-        fprintf(fp, "%s,%s,%s,{%s},{%s},%s\n", 
+        fprintf(fp, "%s,%s,%s,%s,%s,%s\n", 
             p[j].id,
             p[j].num,
             p[j].dt_ajuizamento,
-        	p[j].id_classe,
-			p[j].id_assunto,
+            p[j].id_classe,
+            p[j].id_assunto,
             p[j].ano_eleicao);
     }
 
-    fclose(fp);  // Fechar o arquivo após o loop
-    system("dados_ordenado.csv");  // Corrigido para o nome correto
-    exit(1);
+    fclose(fp);  
+     system("dados_ordenado.csv");
+     return;
 }
 int acharclasse(Processo p[],int i, const char *id){
 	int j;

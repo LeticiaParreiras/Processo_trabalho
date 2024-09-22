@@ -10,6 +10,7 @@ typedef struct {
     char ano_eleicao[10];
 } Processo;
 
+char primeiroCaractere(const char *str);
 int lerArquivo(Processo p[], const char *nome_arquivo);
 int comparar(char *a, char *b);
 void ordenarId(Processo p[], int n);
