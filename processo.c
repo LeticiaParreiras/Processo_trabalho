@@ -1,0 +1,209 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include "processo.h"
+
+#define MAX 8000
+
+
+int lerArquivo(Processo p[], const char *nome_arquivo) {
+    char linha[256];
+    FILE *arq = fopen(nome_arquivo, "r");
+    if (arq == NULL) {
+        printf("ERRO na abertura do arquivo\n");
+        return -1;  // Retorna -1 em caso de erro
+    }
+
+    // Ignorar o cabeçalho
+    fgets(linha, sizeof(linha), arq);
+
+    int i = 0;
+    const char delimiters[] = ",\"{}";  // vírgulas, aspas duplas e chaves
+    while (fgets(linha, sizeof(linha), arq) != NULL && i < MAX) {
+        char *token = strtok(linha, delimiters);
+        if (token) strcpy(p[i].id, token);
+
+        token = strtok(NULL, delimiters);
+        if (token) strcpy(p[i].num, token);
+
+        token = strtok(NULL, delimiters);
+        if (token) strcpy(p[i].dt_ajuizamento, token);
+
+        token = strtok(NULL, "\"{}");  // Pega a parte entre as aspas
+		if (token) strcpy(p[i].id_classe, token);
+      
+        token = strtok(NULL, delimiters);
+        if (token) strcpy(p[i].id_assunto, token);
+
+        token = strtok(NULL, delimiters);
+        if (token) strcpy(p[i].ano_eleicao, token);
+        p[i].ano_eleicao[strcspn(p[i].ano_eleicao, "\n")] = 0;  // Remove o '\n'
+
+        i++;
+    }
+    fclose(arq);
+    return i;  // Retorna o número de registros lidos
+}
+
+int comparar(char *a, char *b) {
+    return atoi(a) - atoi(b);  // Converte as strings para inteiros e compara
+}
+
+void ordenarId(Processo p[], int n) {
+    int i, j;
+    for (i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        for (j = i + 1; j < n; j++) {
+            if (comparar(p[j].id, p[minIndex].id) < 0) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            Processo temp = p[i];
+            p[i] = p[minIndex];
+            p[minIndex] = temp;
+        }
+    }
+}
+
+int compararData(char *data1, char *data2) {
+    return strcmp(data1, data2);  // Considera a data como string para comparação
+}
+
+void ordenarDt(Processo p[], int n) {
+    int i, j;
+    for (i = 0; i < n - 1; i++) {
+        int minIndex = i;
+        for (j = i + 1; j < n; j++) {
+            if (compararData(p[j].dt_ajuizamento, p[minIndex].dt_ajuizamento) < 0) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            Processo temp = p[i];
+            p[i] = p[minIndex];
+            p[minIndex] = temp;
+        }
+    }
+}
+
+void criarArquivo(Processo p[], int i) {
+    FILE *fp;
+    int j, k;
+    fp = fopen("dados_ordenado.csv", "w");
+    if (fp == NULL) {
+        printf("ERRO na abertura do arquivo\n");
+        exit(1);
+    }
+
+    // Escrevendo o cabeçalho no arquivo CSV
+    fprintf(fp, "id,numero,data_ajuizamento,id_classe,id_assunto,ano_eleicao\n");
+
+    // Escrevendo os dados dos processos no arquivo CSV
+    for (j = 0; j < i; j++) {
+        fprintf(fp, "%s,%s,%s,{%s},{%s},%s\n", 
+            p[j].id,
+            p[j].num,
+            p[j].dt_ajuizamento,
+        	p[j].id_classe,
+			p[j].id_assunto,
+            p[j].ano_eleicao);
+    }
+
+    fclose(fp);  // Fechar o arquivo após o loop
+    system("dados_ordenado.csv");  // Corrigido para o nome correto
+    exit(1);
+}
+int acharclasse(Processo p[],int i, const char *id){
+	int j;
+    int num = 0;
+    for (j = 0; j < i; j++) {
+        if (strcmp(id, p[j].id_classe) == 0) {
+            num++;
+        }
+    }
+    return num;
+}
+Processo acharprocesso(Processo p[],int i, const char *id){
+	int j;
+	for(j = 0; j < i; j++){
+	if (strcmp(id, p[j].id) == 0){
+		return p[j];
+	}
+		
+	}
+	printf("processo não encontrado");
+		exit (1);
+	
+}
+void calculardias(Processo p[], int i){
+    char id[10], ano_str[5], mes_str[3], dia_str[3];
+    printf("Informe o id do processo: \n");
+    fflush(stdin);
+    fgets(id, 10, stdin);
+    id[strcspn(id, "\n")] = 0;  // Remove o '\n' final
+
+    Processo newp = acharprocesso(p, i, id);
+
+    // Quebra a string de data (no formato "YYYY-MM-DD") para obter ano, mês e dia
+    char *token = strtok(newp.dt_ajuizamento, "-");
+    if (token) strcpy(ano_str, token);
+
+    token = strtok(NULL, "-");
+    if (token) strcpy(mes_str, token);
+
+    token = strtok(NULL, " ");
+    if (token) strcpy(dia_str, token);
+
+    // Converte as strings para inteiros
+    int ano = atoi(ano_str);
+    int mes = atoi(mes_str);
+    int dia = atoi(dia_str);
+
+    // Obtém o tempo atual do sistema
+    time_t t = time(NULL);
+    struct tm *dataatual = localtime(&t);
+
+    // Extrai a data atual
+    int anoatual = dataatual->tm_year + 1900;
+    int mesatual = dataatual->tm_mon + 1;
+    int diaatual = dataatual->tm_mday;
+
+    // Cálculo das diferenças entre ano, mês e dia
+    int resulano = anoatual - ano;
+    int resulmes = mesatual - mes;
+    int resuldia = diaatual - dia;
+    // Ajusta o cálculo para casos onde o dia ou mês ainda não tenha passado
+    if (resuldia < 0) {
+        resuldia += 31;  // Aproximação para o mês anterior
+        resulmes--;
+    }
+    if (resulmes < 0) {
+        resulmes += 12;
+        resulano--;
+    }
+    printf("%d dias, %d meses, %d anos",resuldia,resulmes,resulano);
+    
+    
+}
+int numassuntos(Processo p[],int i){
+	int j,k; int numachados = 0;
+	char achados[10][MAX];
+	
+	for(j = 0; j < i; j++){
+		int existe = 0;
+		for(k = 0; k <= numachados; k++){
+			if (strcmp(p[j].id_assunto, achados[k]) == 0){
+			existe = 1;
+			break;
+			}
+			
+		}
+		if(!existe){
+			strcpy(p[j].id_assunto,achados[numachados]);
+			numachados++;
+		}
+	}
+	return numachados;
+}
