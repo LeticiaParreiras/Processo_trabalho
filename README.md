@@ -30,8 +30,3 @@ Os dados devem ser organizados em vetores de structs.
 As respostas dos itens 1 e 2 devem ser armazenados em arquivo “cvs”, mantendo cabeçalho.
 Deve ser implementada 1 (uma) função para resolver cada item indicado acima.
 O código-fonte deve ser modularizado em três arquivos, conforme indicado nas aulas de agosto/2024.
-Este trabalho prático pode ser desenvolvido em grupos de até 4 integrantes e vale 3 pontos.
-Caso seja entregue com atraso, o valor total diminuirá à taxa de 10% ao dia .
-O código-fonte deve ser enviado pelo AVA e disponibilizado no Git.
-Trabalhos iguais ou com seções iguais/parecidos terão nota 0.
-Na biblioteca string.h existem funções para manipulação de strings que podem ser úteis.
