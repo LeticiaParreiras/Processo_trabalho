@@ -4,7 +4,7 @@
 #include <time.h>
 #include "processo.h"
 
-#define MAX 8000
+#define MAX 5000
 
 int lerArquivo(Processo p[], const char *nome_arquivo) {
     char linha[256];
@@ -111,6 +111,7 @@ void criarArquivo(Processo p[], int i) {
     }
 
     fclose(fp);  
+    printf("Abrindo arquivo...\n");
      system("dados_ordenado.csv");
      return;
 }
@@ -182,27 +183,30 @@ void calculardias(Processo p[], int i){
         resulmes += 12;
         resulano--;
     }
-    printf("%d dias, %d meses, %d anos",resuldia,resulmes,resulano);
+    printf("O processo esta em tramitação na justiça à %d dias, %d meses, %d anos",resuldia,resulmes,resulano);
     
     
 }
-int numassuntos(Processo p[],int i){
-	int j,k; int numachados = 0;
-	char achados[10][MAX];
-	
-	for(j = 0; j < i; j++){
-		int existe = 0;
-		for(k = 0; k <= numachados; k++){
-			if (strcmp(p[j].id_assunto, achados[k]) == 0){
-			existe = 1;
-			break;
-			}
-			
-		}
-		if(!existe){
-			strcpy(p[j].id_assunto,achados[numachados]);
-			numachados++;
-		}
-	}
-	return numachados;
+int numassuntos(Processo p[], int i) {
+    int j, k;
+    int numachados = 0;
+    char achados[MAX][20];
+
+    for (j = 0; j < i; j++) {
+        int existe = 0;
+        for (k = 0; k < numachados; k++) {  
+            if (strcmp(p[j].id_assunto, achados[k]) == 0) {
+                existe = 1;
+                break;
+            }
+        }if (!existe) {
+            strcpy(achados[numachados], p[j].id_assunto);
+			 
+            numachados++;
+            
+        }
+        
+        
+    }
+    return numachados;
 }
