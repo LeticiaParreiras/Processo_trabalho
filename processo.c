@@ -11,7 +11,7 @@ int lerArquivo(Processo p[], const char *nome_arquivo) {
     FILE *arq = fopen(nome_arquivo, "r");
     if (arq == NULL) {
         printf("ERRO na abertura do arquivo\n");
-        return -1;  // Retorna -1 em caso de erro
+        return -1;  
     }
 
     // Ignorar o cabeçalho
@@ -68,7 +68,7 @@ void ordenarId(Processo p[], int n) {
 }
 
 int compararData(char *data1, char *data2) {
-    return strcmp(data1, data2);  // Considera a data como string para comparação
+    return strcmp(data1, data2);  
 }
 
 void ordenarDt(Processo p[], int n) {
@@ -174,7 +174,7 @@ void calculardias(Processo p[], int i){
     int resulano = anoatual - ano;
     int resulmes = mesatual - mes;
     int resuldia = diaatual - dia;
-    // Ajusta o cálculo para casos onde o dia ou mês ainda não tenha passado
+    // Ajusta o cálculo para casos onde o dia/mês/ ano ainda não tenha passado
     if (resuldia < 0) {
         resuldia += 31;  // Aproximação para o mês anterior
         resulmes--;
