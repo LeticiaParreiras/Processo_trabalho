@@ -14,7 +14,7 @@ int lerArquivo(Processo p[], const char *nome_arquivo) {
         return -1;  
     }
 
-    // Ignorar o cabeçalho
+    // Ignorar o cabeï¿½alho
     fgets(linha, sizeof(linha), arq);
 
     int i = 0;
@@ -22,28 +22,28 @@ int lerArquivo(Processo p[], const char *nome_arquivo) {
     while (fgets(linha, sizeof(linha), arq) != NULL && i < MAX) {
         linha[strcspn(linha, "\n")] = 0; // Remove o '\n'
         
-        char *token = strtok(linha, ";");
+        char *token = strtok(linha, ",");
         if (token) strcpy(p[i].id, token);
 
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ",");
         if (token) strcpy(p[i].num, token);
 
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ",");
         if (token) strcpy(p[i].dt_ajuizamento, token);
         
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ",");
         if (token)strcpy(p[i].id_classe, token);
        
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ",");
         if (token)strcpy(p[i].id_assunto, token);
       
-        token = strtok(NULL, ";");
+        token = strtok(NULL, ",");
         if (token) strcpy(p[i].ano_eleicao, token);
 
         i++;
     }
     fclose(arq);
-    return i;  // Retorna o número de registros lidos
+    return i;  // Retorna o nÃºmero de registros lidos
 }
 
 int comparar(char *a, char *b) {
@@ -96,8 +96,8 @@ void criarArquivo(Processo p[], int i) {
         exit(1);
     }
 
-    // Escrevendo o cabeçalho no arquivo CSV
-    fprintf(fp, "id;numero;data_ajuizamento;id_classe;id_assunto;ano_eleicao\n");
+    // Escrevendo o cabeÃ§alho no arquivo CSV
+    fprintf(fp, "id,numero;data_ajuizamento,id_classe,id_assunto,ano_eleicao\n");
 
     // Escrevendo os dados dos processos no arquivo CSV
     for (j = 0; j < i; j++) {
@@ -146,7 +146,7 @@ void calculardias(Processo p[], int i){
 
     Processo newp = acharprocesso(p, i, id);
 
-    // Quebra a string de data (no formato "YYYY-MM-DD") para obter ano, mês e dia
+    // Quebra a string de data (no formato "YYYY-MM-DD") para obter ano, mÃªs e dia
     char *token = strtok(newp.dt_ajuizamento, "-");
     if (token) strcpy(ano_str, token);
 
@@ -161,7 +161,7 @@ void calculardias(Processo p[], int i){
     int mes = atoi(mes_str);
     int dia = atoi(dia_str);
 
-    // Obtém o tempo atual do sistema
+    // Obtem o tempo atual do sistema
     time_t t = time(NULL);
     struct tm *dataatual = localtime(&t);
 
@@ -170,20 +170,20 @@ void calculardias(Processo p[], int i){
     int mesatual = dataatual->tm_mon + 1;
     int diaatual = dataatual->tm_mday;
 
-    // Cálculo das diferenças entre ano, mês e dia
+    // Calculo das diferenÃ§as entre ano, mï¿½es e dia
     int resulano = anoatual - ano;
     int resulmes = mesatual - mes;
     int resuldia = diaatual - dia;
-    // Ajusta o cálculo para casos onde o dia/mês/ ano ainda não tenha passado
+    // Ajusta o cï¿½lculo para casos onde o dia/mes/ ano ainda nao tenha passado
     if (resuldia < 0) {
-        resuldia += 31;  // Aproximação para o mês anterior
+        resuldia += 31;  // AproximaÃ§Ã£o para o mes anterior
         resulmes--;
     }
     if (resulmes < 0) {
         resulmes += 12;
         resulano--;
     }
-    printf("O processo esta em tramitação na justiça à %d dias, %d meses, %d anos",resuldia,resulmes,resulano);
+    printf("O processo esta em tramitação na justiça a %d dias, %d meses, %d anos",resuldia,resulmes,resulano);
     
     
 }

@@ -17,9 +17,9 @@ int main(){
     printf("\nEscolha: ");
 	scanf("%d", &op);
 	system("cls");
-    i = lerArquivo(p, "dados.csv");
+    i = lerArquivo(p, "processo_043_202409032338.csv");
     if (i == -1) {
-        return 1;  // Saída em caso de erro na leitura
+        return 1;  // Saida em caso de erro na leitura
     }
 
     switch (op) {
@@ -32,14 +32,15 @@ int main(){
             criarArquivo(p, i);
             break;
         case 3:{
-			char classeid[10];
-        	printf("Informe o número de id da classse\n");
+			char str[10],classeid[10];
+        	printf("Informe o numero de id da classse(somente os numeros)\n");
         	fflush(stdin);
-        	fgets(classeid,10,stdin);
-        	classeid[strcspn(classeid, "\n")] = 0;
+        	scanf("%s",&str);
+			sprintf(classeid, "{%s}", str);
         	int num = acharclasse(p,i,classeid);
-        	printf("estão vinculados %d a classe %s\n",num,classeid);
-        	break;}
+        	printf("estao vinculados %d a classe %s\n",num,str);
+        	break;
+			}
         case 4 :{
         	int numachdos = numassuntos(p,i);
         	printf("Costam %d id de assunto na tabela",numachdos);
@@ -50,7 +51,7 @@ int main(){
         	break;
         	
         default:
-            printf("Opção inválida!\n");
+            printf("OpÃ§Ã£o invÃ¡lida!\n");
             break;
     }
 
