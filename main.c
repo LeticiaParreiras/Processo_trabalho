@@ -13,7 +13,7 @@ int main(){
 
     int op;
     printf("\t**MENU**\n");
-    printf("\n1 - Ordenar por ID\n2 - Ordenar por Data de Ajuizamento\n3 - Achar quantos processos est„o vinculados a uma determinada classe\n4 - Identificar quantos id_assuntos constam \n5 - Calcular tempo do processo\n");
+    printf("\n1 - Ordenar por ID\n2 - Ordenar por Data de Ajuizamento\n3 - Achar quantos processos est√£o vinculados a uma determinada classe\n4 - Identificar quantos id_assuntos constam \n5 - Calcular tempo do processo\n");
     printf("\nEscolha: ");
 	scanf("%d", &op);
 	system("cls");

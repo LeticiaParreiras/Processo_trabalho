@@ -14,7 +14,7 @@ int lerArquivo(Processo p[], const char *nome_arquivo) {
         return -1;  
     }
 
-    // Ignorar o cabeï¿½alho
+    // Ignorar o cabeÃ§alho
     fgets(linha, sizeof(linha), arq);
 
     int i = 0;
@@ -133,7 +133,7 @@ Processo acharprocesso(Processo p[],int i, const char *id){
 	}
 		
 	}
-	printf("processo não encontrado");
+	printf("processo nao encontrado");
 		exit (1);
 	
 }
@@ -174,7 +174,7 @@ void calculardias(Processo p[], int i){
     int resulano = anoatual - ano;
     int resulmes = mesatual - mes;
     int resuldia = diaatual - dia;
-    // Ajusta o cï¿½lculo para casos onde o dia/mes/ ano ainda nao tenha passado
+    // Ajusta o calculo para casos onde o dia/mes/ ano ainda nao tenha passado
     if (resuldia < 0) {
         resuldia += 31;  // AproximaÃ§Ã£o para o mes anterior
         resulmes--;
@@ -183,7 +183,7 @@ void calculardias(Processo p[], int i){
         resulmes += 12;
         resulano--;
     }
-    printf("O processo esta em tramitação na justiça a %d dias, %d meses, %d anos",resuldia,resulmes,resulano);
+    printf("O processo esta em tramitaÃ§Ã£o na justiÃ§a a %d dias, %d meses, %d anos",resuldia,resulmes,resulano);
     
     
 }
